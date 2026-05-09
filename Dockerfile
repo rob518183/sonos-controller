@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies for build)
-RUN npm ci
+# Install git and all dependencies (including dev dependencies for build)
+RUN apk add --no-cache git && npm install
 
 # Copy source code
 COPY . .
@@ -25,18 +25,22 @@ WORKDIR /app
 # Copy built app from builder stage
 COPY --from=builder /app/dist ./dist
 
-# Copy server.js and package files
+# Copy server.js, package files, and entrypoint
 COPY --from=builder /app/server.js ./
 COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/docker-entrypoint.sh ./
 
-# Install only production dependencies
-RUN npm ci --only=production
+# Install git and production dependencies
+RUN apk add --no-cache git && npm install --only=production
 
-# Expose port 3000
-EXPOSE 3000
+# Make entrypoint executable
+RUN chmod +x ./docker-entrypoint.sh
 
-# Set environment variable for port (optional, defaults to 3000)
+# Expose ports for controller and API
+EXPOSE 3000 5005
+
+# Set environment variable for controller port (optional, defaults to 3000)
 ENV PORT=3000
 
-# Start the server
-CMD ["node", "server.js"]
+# Start both services
+CMD ["sh", "./docker-entrypoint.sh"]
