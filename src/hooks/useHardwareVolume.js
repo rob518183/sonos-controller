@@ -10,7 +10,7 @@ const SILENT_WAV =
 // How many Sonos volume units to move per full device-volume step.
 // iOS has 16 steps (1/16 ≈ 0.0625 each); Android has ~15 (1/15 ≈ 0.067).
 // A multiplier of 48 gives ~3 Sonos units per button press — feels natural.
-const STEP_MULTIPLIER = 48
+const STEP_MULTIPLIER = 32
 
 /**
  * Intercepts hardware volume button presses and applies them to Sonos volume.
