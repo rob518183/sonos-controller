@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Volume2, Waves, ChevronDown, AudioLines, Music2, Link2, Unlink2 } from 'lucide-react'
-import { useHardwareVolume } from '../hooks/useHardwareVolume'
 
 
 function useDebouncedApply(config, command, delay = 350) {
@@ -197,11 +196,6 @@ export default function QuickControls({ config, appliedProfile, collapsed, onTog
     setVolume(v)
     volApply.trigger(v)
   }
-
-  // Hardware volume buttons → Sonos volume (must come after handleVolume)
-  const volumeRef = useRef(volume)
-  useEffect(() => { volumeRef.current = volume }, [volume])
-  useHardwareVolume(() => volumeRef.current, handleVolume)
 
   const handleSub = (v) => {
     markInteracting()
