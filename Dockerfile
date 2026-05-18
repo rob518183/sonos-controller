@@ -33,6 +33,10 @@ COPY --from=builder /app/docker-entrypoint.sh ./
 # Install git and production dependencies
 RUN apk add --no-cache git && npm install --only=production
 
+# Create directories for Sonos API configuration
+RUN mkdir -p ./node_modules/node-sonos-http-api/presets && \
+    echo '{}' > ./node_modules/node-sonos-http-api/settings.json
+
 # Make entrypoint executable
 RUN chmod +x ./docker-entrypoint.sh
 
